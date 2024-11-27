@@ -1,6 +1,8 @@
 @page "/"
 @inject CalculatorLogic.Calculator Calculator
 
+<Title>Calculator</Title>
+
 <div class="container mt-4">
     <!-- Header Section -->
     <div class="row mb-4">
@@ -82,7 +84,9 @@
     
     private double[] ParseInputValues()
     {
-        
+        // Reset colors to default
+        ResultBackgroundColor = "#FFECD7"; // Default background color
+        TextColor = "black"; // Default text color
         if (string.IsNullOrWhiteSpace(InputValues))
         {   
             ResultBackgroundColor = " #B70F0A";
@@ -157,23 +161,27 @@
 
     private void ComputeSampleStandardDeviation()
     {
+        TextColor = "black";
         try
         {
-            TextColor = "black";
-            var values = ParseInputValues();
+            var values = ParseInputValues(); // Colors reset inside this method if inputs are valid
             var result = Calculator.ComputeSampleStandardDeviation(values);
             ResultMessage = $"Sample Standard Deviation: {result}";
-
         }
         catch (Exception ex)
         {
-            // Handle errors
+            // Update the result message and visual feedback for errors
             ResultMessage = $"Error: {ex.Message}";
+            ResultBackgroundColor = "#B70F0A"; // Red background for error
+            TextColor = "#FFFFFF"; // White text for better visibility
         }
     }
 
+
+
     private void ComputePopulationStandardDeviation()
     {
+        TextColor = "black";
         // Logic for computing the population standard deviation
         try
         {
@@ -184,8 +192,10 @@
         }
         catch (Exception ex)
         {
-            // Handle errors
+            // Update the result message and visual feedback for errors
             ResultMessage = $"Error: {ex.Message}";
+            ResultBackgroundColor = "#B70F0A"; // Red background for error
+            TextColor = "#FFFFFF"; // White text for better visibility
         }
     }
 
@@ -208,20 +218,31 @@
     {
         try
         {
+            // Reset text color to black before processing
+            TextColor = "black";
+
             // Split input into parts
             var parts = InputValues.Split(',', StringSplitOptions.TrimEntries);
 
-            // Validate that there are exactly three parts
+            // Validate input
             if (parts.Length != 3)
+            {
                 throw new ArgumentException("Input must contain exactly three values: value, mean, and standard deviation.");
+            }
 
-            // Parse the values
+            // Parse values
             if (!double.TryParse(parts[0], out var value))
+            {
                 throw new ArgumentException("Invalid value input.");
+            }
             if (!double.TryParse(parts[1], out var mean))
+            {
                 throw new ArgumentException("Invalid mean input.");
+            }
             if (!double.TryParse(parts[2], out var stdDev) || stdDev <= 0)
+            {
                 throw new ArgumentException("Standard deviation must be a positive number.");
+            }
 
             // Compute the Z-Score
             var zScore = Calculator.ComputeZScore(value, mean, stdDev);
@@ -231,10 +252,13 @@
         }
         catch (Exception ex)
         {
-            // Display error message
+            // Update the result message and visual feedback for errors
             ResultMessage = $"Error: {ex.Message}";
+            ResultBackgroundColor = "#B70F0A"; // Red background for error
+            TextColor = "#FFFFFF"; // White text for better visibility
         }
     }
+
 
     private void ComputeLinearRegression()
     {
@@ -254,8 +278,10 @@
         }
         catch (Exception ex)
         {
-            // Handle any errors and display an appropriate message
+            // Update the result message and visual feedback for errors
             ResultMessage = $"Error: {ex.Message}";
+            ResultBackgroundColor = "#B70F0A"; // Red background for error
+            TextColor = "#FFFFFF"; // White text for better visibility
         }
     }
 
@@ -286,8 +312,10 @@
         }
         catch (Exception ex)
         {
-            // Display error message
+            // Update the result message and visual feedback for errors
             ResultMessage = $"Error: {ex.Message}";
+            ResultBackgroundColor = "#B70F0A"; // Red background for error
+            TextColor = "#FFFFFF"; // White text for better visibility
         }
     }
 }

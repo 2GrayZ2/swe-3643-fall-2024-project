@@ -33,7 +33,7 @@ Zachary Gray and Miguel Ramirez
 ---
 
 # Architecture
-[Architecture Diagram](src/docs/ArchitectureDia.md)
+
 ---
 
 # Environment
