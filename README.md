@@ -49,6 +49,7 @@ Zachary Gray and Miguel Ramirez
 ---
 
 # Reviewing Unit Test Coverage
+![Alt text](src/docs/UnitTestCoverage100.png)
 
 ---
 
