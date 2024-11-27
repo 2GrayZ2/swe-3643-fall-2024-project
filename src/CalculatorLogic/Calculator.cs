@@ -7,7 +7,7 @@ namespace CalculatorLogic
     public class Calculator
     {
         // preq-LOGIC-5
-        public static double ComputeMean(double[] valueList)
+        public double ComputeMean(double[] valueList)
         {
             if (valueList == null || valueList.Length == 0)
             {
@@ -24,7 +24,7 @@ namespace CalculatorLogic
             return sumAccumulator / valueList.Length;
         }
 
-        public static double ComputeSquareOfDifferences(double[] valueList, double mean)
+        public double ComputeSquareOfDifferences(double[] valueList, double mean)
         {
             if (valueList == null || valueList.Length == 0) { 
                 throw new ArgumentException("valuesList parameter cannot be null or empty");
@@ -40,7 +40,7 @@ namespace CalculatorLogic
             return squareAccumulator;
         }
 
-        public static double ComputeVariance(double squareOfDifferences, double numValues, bool isPopulation)
+        public double ComputeVariance(double squareOfDifferences, double numValues, bool isPopulation)
         {
             if (!isPopulation)
             {
@@ -54,7 +54,7 @@ namespace CalculatorLogic
             return squareOfDifferences / numValues;
         }
 
-        public static double ComputeStandardDeviation(double[] valueList, bool isPopulation)
+        public double ComputeStandardDeviation(double[] valueList, bool isPopulation)
         {
             if (valueList == null || valueList.Length == 0) { 
                 throw new ArgumentException("valuesList parameter cannot be null or empty");
@@ -68,7 +68,7 @@ namespace CalculatorLogic
         }
 
         // preq-LOGIC-3
-        public static double ComputeSampleStandardDeviation(double[] valueList)
+        public double ComputeSampleStandardDeviation(double[] valueList)
         {
             if (valueList == null || valueList.Length == 0)
             {
@@ -79,7 +79,7 @@ namespace CalculatorLogic
         }
 
         // preq-LOGIC-4
-        public static double ComputePopulationStandardDeviation(double[] valueList)
+        public double ComputePopulationStandardDeviation(double[] valueList)
         {
             if (valueList == null || valueList.Length == 0)
             {
@@ -96,7 +96,7 @@ namespace CalculatorLogic
         }
 
         // preq-LOGIC-6
-        public static double ComputeZScore(double value, double mean, double standardDeviation)
+        public double ComputeZScore(double value, double mean, double standardDeviation)
         {
             if (mean == 0)
             {
@@ -112,7 +112,7 @@ namespace CalculatorLogic
         }
 
         // preq-LOGIC-7
-        public static (double Intercept, double Slope) ComputeSingleLinearRegression(List<(double X, double Y)> dataPoints)
+        public (double Intercept, double Slope) ComputeSingleLinearRegression(List<(double X, double Y)> dataPoints)
         {
             int n = dataPoints.Count;
             
@@ -155,7 +155,7 @@ namespace CalculatorLogic
             return (intercept, slope);
         }
 
-        public static double PredictYFromLinearRegression(double xValue, double slope, double intercept)
+        public double ComputePredictYFromLinearRegression(double xValue, double slope, double intercept)
         {
             if (double.IsNaN(xValue) || double.IsNaN(slope) || double.IsNaN(intercept))
             {

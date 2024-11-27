@@ -8,6 +8,14 @@ namespace CalculatorLogicUnitTests
     [TestFixture]
     public class CalculatorLogicUnitTests
     {
+        private Calculator _calculator;
+
+        [SetUp]
+        public void Setup()
+        {
+            _calculator = new Calculator(); // Create an instance
+        }
+
         //preq-UNIT-TEST-4
         [Test]
         public void ComputeMean_ValidInput_ReturnsCorrectMean()
@@ -17,7 +25,7 @@ namespace CalculatorLogicUnitTests
             double [] values = {1, 2, 3, 4, 5};
 
             // Act
-            double mean = Calculator.ComputeMean(values);
+            double mean = _calculator.ComputeMean(values);
 
             // Assert
             Assert.AreEqual(3.0, mean);  // Expected mean is 3.0
@@ -32,7 +40,7 @@ namespace CalculatorLogicUnitTests
             double [] values = {};
             
             //Act
-            Exception exception = Assert.Throws<ArgumentException>(() => Calculator.ComputeMean(values));
+            Exception exception = Assert.Throws<ArgumentException>(() => _calculator.ComputeMean(values));
             
             //Assert
             Assert.AreEqual(exception.Message, "valuesList parameter cannot be null or empty");
@@ -47,7 +55,7 @@ namespace CalculatorLogicUnitTests
             double[] values = { 9, 6, 8, 5, 7 };
 
             //Act
-            double sampleStdDev = Calculator.ComputeSampleStandardDeviation(values);
+            double sampleStdDev = _calculator.ComputeSampleStandardDeviation(values);
 
             //Assert
             Assert.AreEqual(1.5811388300841898, sampleStdDev);
@@ -63,7 +71,7 @@ namespace CalculatorLogicUnitTests
 
             //Act
             Exception exception =
-                Assert.Throws<ArgumentException>(() => Calculator.ComputeSampleStandardDeviation(values));
+                Assert.Throws<ArgumentException>(() => _calculator.ComputeSampleStandardDeviation(values));
 
             //Assert
             Assert.AreEqual(exception.Message, "valuesList parameter cannot be null or empty");
@@ -78,7 +86,7 @@ namespace CalculatorLogicUnitTests
             double[] values = { 12, 12, 12, 12, 12 };
 
             //Act
-            double sampleStdDev = Calculator.ComputeSampleStandardDeviation(values);
+            double sampleStdDev = _calculator.ComputeSampleStandardDeviation(values);
 
             //Assert
             Assert.AreEqual(0.0, sampleStdDev);
@@ -93,7 +101,7 @@ namespace CalculatorLogicUnitTests
             double[] values = { 12, 12, 12, 12, 12 };
 
             //Act
-            double sampleStdDev = Calculator.ComputePopulationStandardDeviation(values);
+            double sampleStdDev = _calculator.ComputePopulationStandardDeviation(values);
 
             //Assert
             Assert.AreEqual(0.0, sampleStdDev);
@@ -107,7 +115,7 @@ namespace CalculatorLogicUnitTests
             double[] values = { 9, 2, 5, 4, 12, 7, 8, 11, 9, 3, 7, 4, 12, 5, 4, 10, 9, 6, 9, 4 };
 
             // Act
-            double popStdDev = Calculator.ComputePopulationStandardDeviation(values);
+            double popStdDev = _calculator.ComputePopulationStandardDeviation(values);
 
             // Assert
             Assert.AreEqual(2.9833, popStdDev, 0.0001); // Expected population std deviation
@@ -122,7 +130,7 @@ namespace CalculatorLogicUnitTests
 
             //Act
             Exception exception =
-                Assert.Throws<ArgumentException>(() => Calculator.ComputePopulationStandardDeviation(values));
+                Assert.Throws<ArgumentException>(() => _calculator.ComputePopulationStandardDeviation(values));
 
             //Assert
             Assert.AreEqual(exception.Message, "valuesList parameter cannot be null or empty");
@@ -138,7 +146,7 @@ namespace CalculatorLogicUnitTests
 
             //Act
             Exception exception =
-                Assert.Throws<ArgumentException>(() => Calculator.ComputePopulationStandardDeviation(values));
+                Assert.Throws<ArgumentException>(() => _calculator.ComputePopulationStandardDeviation(values));
 
             //Assert
             Assert.AreEqual(exception.Message, "valuesList parameter cannot contain one value");
@@ -155,7 +163,7 @@ namespace CalculatorLogicUnitTests
             double stdDev = 1.5811388300841898;
 
             //Act
-            double zScore = Calculator.ComputeZScore(value, mean, stdDev);
+            double zScore = _calculator.ComputeZScore(value, mean, stdDev);
             //Assert
             Assert.AreEqual(2.846049894151541, zScore);
         }
@@ -172,7 +180,7 @@ namespace CalculatorLogicUnitTests
 
             //Act
             Exception exception =
-                Assert.Throws<ArgumentException>(() => Calculator.ComputeZScore(value, mean, stdDev));
+                Assert.Throws<ArgumentException>(() => _calculator.ComputeZScore(value, mean, stdDev));
             //Assert
             Assert.AreEqual(exception.Message, "parameters cannot be NaN or empty");
         }
@@ -189,7 +197,7 @@ namespace CalculatorLogicUnitTests
 
             //Act
             Exception exception =
-                Assert.Throws<ArgumentException>(() => Calculator.ComputeZScore(value, mean, stdDev));
+                Assert.Throws<ArgumentException>(() => _calculator.ComputeZScore(value, mean, stdDev));
             //Assert
             Assert.AreEqual(exception.Message, "mean cannot be equal to zero");
         }
@@ -219,7 +227,7 @@ namespace CalculatorLogicUnitTests
             };
 
             //Act
-            var result = Calculator.ComputeSingleLinearRegression(dataPoints);
+            var result = _calculator.ComputeSingleLinearRegression(dataPoints);
             
             //Assert
             Assert.AreEqual(-39.061955918838656, result.Intercept, 1e-15, "Intercept is incorrect");
@@ -236,7 +244,7 @@ namespace CalculatorLogicUnitTests
 
             // Act
             Exception exception =
-                Assert.Throws<ArgumentException>(() => Calculator.ComputeSingleLinearRegression(dataPoints));
+                Assert.Throws<ArgumentException>(() => _calculator.ComputeSingleLinearRegression(dataPoints));
             // Assert
             Assert.AreEqual(exception.Message, "Data points cannot be empty.");
         }
@@ -256,7 +264,7 @@ namespace CalculatorLogicUnitTests
             };
 
             // Act
-            Exception exception = Assert.Throws<ArgumentException>(() => Calculator.ComputeSingleLinearRegression(dataPoints));
+            Exception exception = Assert.Throws<ArgumentException>(() => _calculator.ComputeSingleLinearRegression(dataPoints));
             // Assert
             Assert.AreEqual(exception.Message, "All X values are the same, making the slope undefined.");
         }
@@ -276,7 +284,7 @@ namespace CalculatorLogicUnitTests
             };
 
             // Act
-            Exception exception = Assert.Throws<ArgumentException>(() => Calculator.ComputeSingleLinearRegression(dataPoints));
+            Exception exception = Assert.Throws<ArgumentException>(() => _calculator.ComputeSingleLinearRegression(dataPoints));
             // Assert
             Assert.AreEqual(exception.Message, "All Y values are the same, making the slope undefined.");
         }
@@ -294,7 +302,7 @@ namespace CalculatorLogicUnitTests
             };
 
             // Act
-            Exception ex = Assert.Throws<ArgumentException>(() => Calculator.ComputeSingleLinearRegression(dataPoints));
+            Exception ex = Assert.Throws<ArgumentException>(() => _calculator.ComputeSingleLinearRegression(dataPoints));
             // Assert
             Assert.AreEqual(ex.Message,"All X and Y values are zero.");
         }
@@ -309,7 +317,7 @@ namespace CalculatorLogicUnitTests
             double intercept = -39.061955918838656;
             
             // Act
-            var prediction = Calculator.PredictYFromLinearRegression(xValue, slope, intercept);
+            var prediction = _calculator.ComputePredictYFromLinearRegression(xValue, slope, intercept);
             // Assert
             Assert.AreEqual(54.990850423296244, prediction);
         }
@@ -324,7 +332,7 @@ namespace CalculatorLogicUnitTests
             double intercept = Double.NaN;
             
             // Act
-            Exception ex = Assert.Throws<ArgumentException>(() => Calculator.PredictYFromLinearRegression(xValue, slope, intercept));
+            Exception ex = Assert.Throws<ArgumentException>(() => _calculator.ComputePredictYFromLinearRegression(xValue, slope, intercept));
             // Assert
             Assert.AreEqual(ex.Message,"Missing one or more parameters.");
         }
@@ -336,7 +344,7 @@ namespace CalculatorLogicUnitTests
             double [] valueList = new double[0];
             
             // Act
-            Exception ex = Assert.Throws<ArgumentException>(() => Calculator.ComputeSquareOfDifferences(valueList,50));
+            Exception ex = Assert.Throws<ArgumentException>(() => _calculator.ComputeSquareOfDifferences(valueList,50));
             // Assert
             Assert.AreEqual(ex.Message,"valuesList parameter cannot be null or empty");
         }
@@ -348,7 +356,7 @@ namespace CalculatorLogicUnitTests
             double numValues = 0;
             
             // Act
-            Exception ex = Assert.Throws<ArgumentException>(() => Calculator.ComputeVariance(35,numValues,true));
+            Exception ex = Assert.Throws<ArgumentException>(() => _calculator.ComputeVariance(35,numValues,true));
             // Assert
             Assert.AreEqual(ex.Message,"numValues is too low (sample size must be >= 2, population size must be >= 1)");
         }
@@ -360,7 +368,7 @@ namespace CalculatorLogicUnitTests
             double [] valueList = {};
             
             // Act
-            Exception ex = Assert.Throws<ArgumentException>(() => Calculator.ComputeStandardDeviation(valueList,false));
+            Exception ex = Assert.Throws<ArgumentException>(() => _calculator.ComputeStandardDeviation(valueList,false));
             // Assert
             Assert.AreEqual(ex.Message,"valuesList parameter cannot be null or empty");
         }

@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<CalculatorLogic.Calculator>();
+builder.Services.AddScoped<Calculator>();
 
 
 

@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="app.css"/>
     <link rel="stylesheet" href="CalculatorWebServerApp.styles.css"/>
     <link rel="icon" type="image/png" href="favicon.png"/>
-    <HeadOutlet/>
+    <HeadOutlet @rendermode="InteractiveServer"/>
 </head>
 
-<body>
-<Routes/>
+<body style="min-height: 100vh; height: 100%">
+<Routes @rendermode="InteractiveServer"/>
 <script src="_framework/blazor.web.js"></script>
 </body>
 

@@ -2,40 +2,292 @@
 @inject CalculatorLogic.Calculator Calculator
 
 <div class="container mt-4">
-    <!-- Title and Clear Button -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Calculator</h1>
-        <button class="btn btn-outline-secondary">Clear</button>
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-10">
+            <h1>Calculator</h1>
+        </div>
+        <div class="col-2 text-end">
+            <button type="button" class="btn btn-outline-secondary" style="background-color:@ButtonColor; color:black;  padding: 10px 20px;" @onclick="ComputeClearInputs">Clear</button>
+        </div>
     </div>
 
-    <!-- Instruction Section -->
-    <div class="alert alert-warning text-center">
-        Enter values below, then select an operation
+    <!-- Result Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-warning text-center" role="alert"  style="background-color: @ResultBackgroundColor; padding: 10px;">
+                <p style="background-color: @ResultBackgroundColor; color: @TextColor; padding: 10px;">
+                    @ResultMessage
+                </p>
+            </div>
+        </div>
     </div>
 
     <!-- Input Section -->
-    <div class="mb-3">
-        <label for="values" class="form-label">Values</label>
-        <textarea id="values" class="form-control" rows="4"></textarea>
+    <div class="row mb-4">
+        <div class="col-12">
+            <label for="values" class="form-label">Values</label>
+            <textarea id="values" class="form-control" rows="5" @bind="InputValues" ></textarea>
+        </div>
     </div>
 
     <!-- Descriptive Statistics Section -->
-    <h4 class="mt-4">Descriptive Statistics</h4>
-    <div class="d-grid gap-2">
-        <button class="btn btn-outline-secondary">Compute Sample Standard Deviation | one value per line</button>
-        <button class="btn btn-outline-secondary">Compute Population Standard Deviation | one value per line</button>
-        <button class="btn btn-outline-secondary">Compute Mean | one value per line</button>
-        <button class="btn btn-outline-secondary">Compute Z Score | value, mean, stdDev on one line</button>
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4>Descriptive Statistics</h4>
+            <div class="d-grid gap-2">
+                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputeSampleStandardDeviation">
+                    Compute Sample Standard Deviation | one value per line
+                </button>
+                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputePopulationStandardDeviation">
+                    Compute Population Standard Deviation | one value per line
+                </button>
+                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputeMean">
+                    Compute Mean | one value per line
+                </button>
+                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeZScore">
+                    Compute Z Score | value, mean, stdDev on one line
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Single Linear Regression Section -->
-    <h4 class="mt-5">Single Linear Regression</h4>
-    <div class="d-grid gap-2">
-        <button class="btn btn-outline-secondary">Compute Single Linear Regression Formula | one x,y pair per line</button>
-        <button class="btn btn-outline-secondary">Compute Y from Linear Regression Formula | x, m, b on one line</button>
+    <div class="row">
+        <div class="col-12">
+            <h4>Single Linear Regression</h4>
+            <div class="d-grid gap-2">
+                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeLinearRegression">
+                    Compute Single Linear Regression
+                </button>
+                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeYFromRegression">
+                    Predict Y from Regression Formula | x,m, b on one line
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
+
 @code {
+    private string InputValues { get; set; } = "";
+
+    private string ResultMessage { get; set; } = "Enter values below and select operation";
+    private string ResultBackgroundColor { get; set; } = "#FFECD7";
+    private string ButtonColor { get; set; } = "#EBEBEB";
+    private string TextColor { get; set; } = "black";
+
+    private List<Xy> Points { get; set; } = new();
+    public sealed record Xy(double X, double Y);
     
+    private double[] ParseInputValues()
+    {
+        
+        if (string.IsNullOrWhiteSpace(InputValues))
+        {   
+            ResultBackgroundColor = " #B70F0A";
+            TextColor = "#FFFFFF";
+            throw new ArgumentException("There is not a single valid numeric value.");
+        }
+
+        // Split the input into potential numeric values
+        var values = InputValues
+            .Split(new[] { '\n', ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        // Attempt to parse each value
+        var numericValues = new List<double>();
+        foreach (var value in values)
+        {
+            if (!double.TryParse(value.Trim(), out double result))
+            {
+                ResultBackgroundColor = " #B70F0A";
+                TextColor = "#FFFFFF";
+                throw new ArgumentException($"Invalid numeric value detected: '{value}'");
+            }
+            numericValues.Add(result);
+        }
+
+        if (numericValues.Count == 0)
+        {
+            ResultBackgroundColor = " #B70F0A";
+            TextColor = "#FFFFFF";
+            throw new ArgumentException("No valid numeric values were found in the input.");
+        }
+
+        return numericValues.ToArray();
+    }
+
+
+    private void ComputeClearInputs()
+    {
+        InputValues = "";
+        ResultMessage = "Enter values below and select operation";
+        // Reset Result and Background Color
+        ResultBackgroundColor = "#FFECD7"; // Reset background color on new input
+        TextColor = "black"; // Reset text color to black
+    }
+    
+    private void ParseXYPairs()
+    {
+        Points.Clear(); // Clear previous points before parsing new input
+        if (string.IsNullOrWhiteSpace(InputValues)) 
+        {
+            throw new ArgumentException("Input values cannot be empty.");
+        }
+
+        var pairs = InputValues.Split('\n');
+        foreach (var pair in pairs)
+        {
+            var xy = pair.Split(',');
+            if (xy.Length != 2) continue;
+
+            if (double.TryParse(xy[0], out var x) && double.TryParse(xy[1], out var y))
+            {
+                Points.Add(new Xy(x, y));
+            }
+        }
+
+        if (Points.Count == 0)
+        {
+            throw new ArgumentException("No valid x, y pairs found.");
+        }
+
+        ResultMessage = $"Parsed {Points.Count} points successfully.";
+    }
+
+    private void ComputeSampleStandardDeviation()
+    {
+        try
+        {
+            TextColor = "black";
+            var values = ParseInputValues();
+            var result = Calculator.ComputeSampleStandardDeviation(values);
+            ResultMessage = $"Sample Standard Deviation: {result}";
+
+        }
+        catch (Exception ex)
+        {
+            // Handle errors
+            ResultMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private void ComputePopulationStandardDeviation()
+    {
+        // Logic for computing the population standard deviation
+        try
+        {
+            var values = ParseInputValues();
+            var result = Calculator.ComputePopulationStandardDeviation(values);
+            ResultMessage = $"Population Standard Deviation: {result}";
+
+        }
+        catch (Exception ex)
+        {
+            // Handle errors
+            ResultMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private void ComputeMean()
+    {
+        try
+        {
+            var values = ParseInputValues();
+            var result = Calculator.ComputeMean(values);
+            ResultMessage = $"Mean: {result:F0}";
+        }
+        catch (Exception ex)
+        {
+            ResultMessage = $"Error: {ex.Message}";
+        }
+    }
+
+
+    private void ComputeZScore()
+    {
+        try
+        {
+            // Split input into parts
+            var parts = InputValues.Split(',', StringSplitOptions.TrimEntries);
+
+            // Validate that there are exactly three parts
+            if (parts.Length != 3)
+                throw new ArgumentException("Input must contain exactly three values: value, mean, and standard deviation.");
+
+            // Parse the values
+            if (!double.TryParse(parts[0], out var value))
+                throw new ArgumentException("Invalid value input.");
+            if (!double.TryParse(parts[1], out var mean))
+                throw new ArgumentException("Invalid mean input.");
+            if (!double.TryParse(parts[2], out var stdDev) || stdDev <= 0)
+                throw new ArgumentException("Standard deviation must be a positive number.");
+
+            // Compute the Z-Score
+            var zScore = Calculator.ComputeZScore(value, mean, stdDev);
+
+            // Update the result message
+            ResultMessage = $"Z-Score: {zScore}";
+        }
+        catch (Exception ex)
+        {
+            // Display error message
+            ResultMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private void ComputeLinearRegression()
+    {
+        try
+        {
+            // Parse the input data into Points
+            ParseXYPairs();
+
+            // Convert Points (List<XY>) to List<(double X, double Y)>
+            var tuplePoints = Points.Select(p => (p.X, p.Y)).ToList();
+
+            // Pass the tuplePoints to the CalculatorInstance
+            var result = Calculator.ComputeSingleLinearRegression(tuplePoints);
+
+            // Display the linear regression result
+            ResultMessage = $"Single Linear Regression Formula: y = {result.Slope}x + {result.Intercept}";
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors and display an appropriate message
+            ResultMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private void ComputeYFromRegression()
+    {
+        try
+        {
+            // Split the input into three parts: x, m, and b
+            var parts = InputValues.Split(',', StringSplitOptions.TrimEntries);
+
+            // Validate there are exactly 3 parts
+            if (parts.Length != 3)
+                throw new ArgumentException("Input must contain exactly three values: x, m, and b.");
+
+            // Parse the values
+            if (!double.TryParse(parts[0], out var x))
+                throw new ArgumentException("Invalid x input.");
+            if (!double.TryParse(parts[1], out var m))
+                throw new ArgumentException("Invalid m input.");
+            if (!double.TryParse(parts[2], out var b))
+                throw new ArgumentException("Invalid b input.");
+
+            // Compute Y using the linear regression formula: Y = m * x + b
+            var y = Calculator.ComputePredictYFromLinearRegression(x, m, b);
+
+            // Update the result message
+            ResultMessage = $"Single Linear Regression Prediction y = {y}";
+        }
+        catch (Exception ex)
+        {
+            // Display error message
+            ResultMessage = $"Error: {ex.Message}";
+        }
+    }
 }
