@@ -60,7 +60,7 @@
             <h4>Single Linear Regression</h4>
             <div class="d-grid gap-2">
                 <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeLinearRegression">
-                    Compute Single Linear Regression
+                    Compute Single Linear Regression | one x,y pair per line
                 </button>
                 <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeYFromRegression">
                     Predict Y from Regression Formula | x,m, b on one line
@@ -82,21 +82,30 @@
     private List<Xy> Points { get; set; } = new();
     public sealed record Xy(double X, double Y);
     
-    private double[] ParseInputValues()
+    private double[] ParseInputValues(bool allowCommas = false)
     {
         // Reset colors to default
         ResultBackgroundColor = "#FFECD7"; // Default background color
         TextColor = "black"; // Default text color
+
         if (string.IsNullOrWhiteSpace(InputValues))
-        {   
-            ResultBackgroundColor = " #B70F0A";
+        {
+            ResultBackgroundColor = "#B70F0A";
             TextColor = "#FFFFFF";
-            throw new ArgumentException("There is not a single valid numeric value.");
+            throw new ArgumentException("Input cannot be empty.");
+        }
+
+        // If commas are not allowed, check for their presence in the input
+        if (!allowCommas && InputValues.Contains(","))
+        {
+            ResultBackgroundColor = "#B70F0A";
+            TextColor = "#FFFFFF";
+            throw new ArgumentException("Comma-separated values are not allowed for this operation.");
         }
 
         // Split the input into potential numeric values
         var values = InputValues
-            .Split(new[] { '\n', ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            .Split(new[] { '\n', ' ', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
         // Attempt to parse each value
         var numericValues = new List<double>();
@@ -104,7 +113,7 @@
         {
             if (!double.TryParse(value.Trim(), out double result))
             {
-                ResultBackgroundColor = " #B70F0A";
+                ResultBackgroundColor = "#B70F0A";
                 TextColor = "#FFFFFF";
                 throw new ArgumentException($"Invalid numeric value detected: '{value}'");
             }
@@ -113,13 +122,14 @@
 
         if (numericValues.Count == 0)
         {
-            ResultBackgroundColor = " #B70F0A";
+            ResultBackgroundColor = "#B70F0A";
             TextColor = "#FFFFFF";
             throw new ArgumentException("No valid numeric values were found in the input.");
         }
 
         return numericValues.ToArray();
     }
+
 
 
     private void ComputeClearInputs()
@@ -161,19 +171,20 @@
 
     private void ComputeSampleStandardDeviation()
     {
-        TextColor = "black";
         try
         {
+            ResultBackgroundColor = "#FFECD7"; // Default tan background
+            TextColor = "black"; // Default black text
             var values = ParseInputValues(); // Colors reset inside this method if inputs are valid
             var result = Calculator.ComputeSampleStandardDeviation(values);
             ResultMessage = $"Sample Standard Deviation: {result}";
         }
         catch (Exception ex)
         {
-            // Update the result message and visual feedback for errors
-            ResultMessage = $"Error: {ex.Message}";
             ResultBackgroundColor = "#B70F0A"; // Red background for error
             TextColor = "#FFFFFF"; // White text for better visibility
+            // Update the result message and visual feedback for errors
+            ResultMessage = $"Error: {ex.Message}";
         }
     }
 
@@ -181,10 +192,11 @@
 
     private void ComputePopulationStandardDeviation()
     {
-        TextColor = "black";
         // Logic for computing the population standard deviation
         try
         {
+            ResultBackgroundColor = "#FFECD7"; // Default tan background
+            TextColor = "black"; // Default black text
             var values = ParseInputValues();
             var result = Calculator.ComputePopulationStandardDeviation(values);
             ResultMessage = $"Population Standard Deviation: {result}";
@@ -203,12 +215,17 @@
     {
         try
         {
+            ResultBackgroundColor = "#FFECD7"; // Default tan background
+            TextColor = "black"; // Default black text
+
             var values = ParseInputValues();
             var result = Calculator.ComputeMean(values);
             ResultMessage = $"Mean: {result:F0}";
         }
         catch (Exception ex)
         {
+            ResultBackgroundColor = "#B70F0A"; // Red background for error
+            TextColor = "#FFFFFF"; // White text for better visibility
             ResultMessage = $"Error: {ex.Message}";
         }
     }
@@ -218,8 +235,8 @@
     {
         try
         {
-            // Reset text color to black before processing
-            TextColor = "black";
+            ResultBackgroundColor = "#FFECD7"; // Default tan background
+            TextColor = "black"; // Default black text
 
             // Split input into parts
             var parts = InputValues.Split(',', StringSplitOptions.TrimEntries);
@@ -252,10 +269,10 @@
         }
         catch (Exception ex)
         {
-            // Update the result message and visual feedback for errors
-            ResultMessage = $"Error: {ex.Message}";
             ResultBackgroundColor = "#B70F0A"; // Red background for error
             TextColor = "#FFFFFF"; // White text for better visibility
+            // Update the result message and visual feedback for errors
+            ResultMessage = $"Error: {ex.Message}";
         }
     }
 
@@ -264,6 +281,9 @@
     {
         try
         {
+            ResultBackgroundColor = "#FFECD7"; // Default tan background
+            TextColor = "black"; // Default black text
+
             // Parse the input data into Points
             ParseXYPairs();
 
@@ -278,17 +298,21 @@
         }
         catch (Exception ex)
         {
-            // Update the result message and visual feedback for errors
-            ResultMessage = $"Error: {ex.Message}";
             ResultBackgroundColor = "#B70F0A"; // Red background for error
             TextColor = "#FFFFFF"; // White text for better visibility
+            // Update the result message and visual feedback for errors
+            ResultMessage = $"Error: {ex.Message}";
         }
     }
 
     private void ComputeYFromRegression()
     {
+        
         try
         {
+            ResultBackgroundColor = "#FFECD7"; // Default tan background
+            TextColor = "black"; // Default black text
+
             // Split the input into three parts: x, m, and b
             var parts = InputValues.Split(',', StringSplitOptions.TrimEntries);
 
@@ -312,10 +336,10 @@
         }
         catch (Exception ex)
         {
-            // Update the result message and visual feedback for errors
-            ResultMessage = $"Error: {ex.Message}";
             ResultBackgroundColor = "#B70F0A"; // Red background for error
             TextColor = "#FFFFFF"; // White text for better visibility
+            // Update the result message and visual feedback for errors
+            ResultMessage = $"Error: {ex.Message}";
         }
     }
 }
