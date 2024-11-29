@@ -18,7 +18,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="alert alert-warning text-center" role="alert"  style="background-color: @ResultBackgroundColor; padding: 10px;">
-                <p style="background-color: @ResultBackgroundColor; color: @TextColor; padding: 10px;">
+                <p id="result" style="background-color: @ResultBackgroundColor; color: @TextColor; padding: 10px;">
                     @ResultMessage
                 </p>
             </div>
@@ -38,16 +38,16 @@
         <div class="col-12">
             <h4>Descriptive Statistics</h4>
             <div class="d-grid gap-2">
-                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputeSampleStandardDeviation">
+                <button id="sample-std-dev-btn" type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputeSampleStandardDeviation">
                     Compute Sample Standard Deviation | one value per line
                 </button>
-                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputePopulationStandardDeviation">
+                <button id="population-std-dev-btn" type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputePopulationStandardDeviation">
                     Compute Population Standard Deviation | one value per line
                 </button>
-                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputeMean">
+                <button id="mean-btn" type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black"  @onclick="ComputeMean">
                     Compute Mean | one value per line
                 </button>
-                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeZScore">
+                <button id="zscore-btn" type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeZScore">
                     Compute Z Score | value, mean, stdDev on one line
                 </button>
             </div>
@@ -59,10 +59,10 @@
         <div class="col-12">
             <h4>Single Linear Regression</h4>
             <div class="d-grid gap-2">
-                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeLinearRegression">
+                <button id="slr-btn" type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeLinearRegression">
                     Compute Single Linear Regression | one x,y pair per line
                 </button>
-                <button type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeYFromRegression">
+                <button id="predictY-btn" type="button" class="btn btn-outline-secondary" style="background-color: @ButtonColor; color: black" @onclick="ComputeYFromRegression">
                     Predict Y from Regression Formula | x,m, b on one line
                 </button>
             </div>
@@ -129,9 +129,7 @@
 
         return numericValues.ToArray();
     }
-
-
-
+    
     private void ComputeClearInputs()
     {
         InputValues = "";
@@ -187,9 +185,7 @@
             ResultMessage = $"Error: {ex.Message}";
         }
     }
-
-
-
+    
     private void ComputePopulationStandardDeviation()
     {
         // Logic for computing the population standard deviation
@@ -265,7 +261,7 @@
             var zScore = Calculator.ComputeZScore(value, mean, stdDev);
 
             // Update the result message
-            ResultMessage = $"Z-Score: {zScore}";
+            ResultMessage = $"Z-Score: {zScore:F5}";
         }
         catch (Exception ex)
         {
@@ -294,7 +290,7 @@
             var result = Calculator.ComputeSingleLinearRegression(tuplePoints);
 
             // Display the linear regression result
-            ResultMessage = $"Single Linear Regression Formula: y = {result.Slope}x + {result.Intercept}";
+            ResultMessage = $"Single Linear Regression Formula: y = {result.Slope:F5}X + {result.Intercept:F4}";
         }
         catch (Exception ex)
         {
