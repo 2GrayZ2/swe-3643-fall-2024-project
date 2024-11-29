@@ -1,49 +1,65 @@
 @startuml
 allowmixing
 
-package "Calculator Logic Module" #lightblue
-{
+package "Calculator Logic Module" #lightblue {
 class DescriptiveStatistics {
-+ ValidationFunctions
-+ LogicFunctions
++ ComputeSampleStandardDeviation()
++ ComputePopulationStandardDeviation()
++ ComputeZScore()
++ ComputeMean()
++ ComputeSingleLinearRegression()
+}
 }
 
-    class LinearRegression {
-        + ValidationFunctions
-        + LogicFunctions
-    }
-
-}
-
-package "Calculator Logic Unit Tests via NUnit" #lightyellow
-{
+package "Calculator Logic Unit Tests via NUnit" #lightyellow {
 class LogicUnitTests {
-+ DescriptiveStatistics_AcceptsValueMeanStdDev_ReturnsZScore()
-+ LinearRegression_EmptyList_ReturnsError()
++ Calculator_ComputeMean_ValidInput_ReturnsCorrectMean
++ Calculator_ComputeMean_EmptyArray_ThrowsArgumentException
++ Calculator_ComputeSampleStandardDeviation_ValidInput_ReturnsCorrectSampleStandardDeviation
++ Calculator_ComputeSampleStandardDeviation_EmptyArray_ThrowsArgumentException
++ Calculator_ComputeSampleStandardDeviation_ArrayOfSameValues_ReturnsZero
++ Calculator_ComputePopulationStandardDeviation_ArrayOfSameValues_ReturnsZero
++ Calculator_ComputePopulationStandardDeviation_ValidInput_ReturnsCorrectPopulationStdDev
++ Calculator_ComputePopulationStandardDeviation_EmptyArray_ThrowsArgumentException
++ Calculator_ComputePopulationStandardDeviation_ArrayContainsOneValue_ReturnsZero
++ Calculator_ComputeZScore_ValidInput_ReturnsCorrectZScore
++ Calculator_ComputeZScore_AllEmptyParameters_ThrowsArgumentException
++ Calculator_ComputeZScore_MeanEqualsZero_ThrowsArgumentException
++ Calculator_ComputeSingleLinearRegression_ValidInput_ReturnsCorrectSingleLinearRegression
++ Calculator_ComputeSingleLinearRegression_EmptyInput_ThrowsArgumentException
++ Calculator_ComputeSingleLinearRegression_XValuesAreSame_ThrowsArgumentException
++ Calculator_ComputeSingleLinearRegression_YValuesAreSame_ThrowsArgumentException
++ Calculator_ComputeSingleLinearRegression_XYValuesAreAllZero_ThrowsArgumentException
++ Calculator_PredictYFromLinearRegression_ValidInput_ReturnsCorrectPrediction
++ Calculator_PredictYFromLinearRegression_MissingOneOrMoreParams_ThrowsArgumentException
++ Calculator_ComputeSquareOfDifferences_EmptyList_ThrowsArgumentException
++ Calculator_ComputeVariance_NumValuesIsTooLow_ThrowsArgumentException
++ Calculator_ComputeStandardDeviation_ValueListParamIsNullOrEmpty_ThrowsArgumentException
 }
 
-LogicUnitTests --> DescriptiveStatistics
-LogicUnitTests --> LinearRegression
-
+    LogicUnitTests --> DescriptiveStatistics
 }
 
-package "Calculator Web Server App" #lightblue
-{
+package "Calculator Web Server App" #lightblue {
 class Models
 class Views
 class Controllers
 
-Controllers --> Views
-Controllers --> Models
-Controllers --> DescriptiveStatistics
-Controllers --> LinearRegression
+    Controllers --> Views
+    Controllers --> Models
+    Controllers --> DescriptiveStatistics
 }
 
 package "Calculator End-To-End Tests via Playwright" #lightyellow {
 class CalculatorEndToEndTests {
-+ CalculatorUI_ListofValues_CalculatesMean()
-+ CalcuatlorUI_EmptyListOfValues_DisplaysError()
-+ CalculatorUI_InvalidListOfValues_DisplaysError()
++ CalculatorWebUi_SampleStandardDeviation_ValidInput_ReturnsCorrectResult()
++ CalculatorWebUi_PopulationStandardDeviation_EmptyList_ReturnsError()
++ CalculatorWebUi_SampleStandardDeviation_SingleValue_ReturnsError()
++ CalculatorWebUi_Mean_ValidInput_ReturnsCorrectResult()
++ CalculatorWebUi_ZScore_ValidInput_ReturnsCorrectResult()
++ CalculatorWebUi_LinearRegression_ValidInput_ReturnsCorrectFormula()
++ CalculatorWebUi_PredictYValue_ValidInput_ReturnsCorrectPrediction()
++ CalculatorWebUi_PageTitle_VerifyTitle_ReturnsCalculator()
 }
 
     CalculatorEndToEndTests --> Controllers : HTTP Call via\n Headless Browser
@@ -55,3 +71,4 @@ class Browser
 Browser <--> Controllers : HTTP Call
 }
 @enduml
+
