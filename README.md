@@ -33,6 +33,7 @@ Zachary Gray and Miguel Ramirez
 ---
 
 # Architecture
+![Alt text](src/docs/ArchitectureDia.png)
 
 ---
 
