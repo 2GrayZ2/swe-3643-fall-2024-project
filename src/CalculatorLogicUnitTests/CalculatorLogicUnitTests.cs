@@ -20,7 +20,6 @@ namespace CalculatorLogicUnitTests
         [Test]
         public void ComputeMean_ValidInput_ReturnsCorrectMean()
         {
-            //preq-UNIT-TEST-4
             // Arrange
             double [] values = {1, 2, 3, 4, 5};
 

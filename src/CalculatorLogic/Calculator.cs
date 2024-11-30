@@ -155,6 +155,7 @@ namespace CalculatorLogic
             return (intercept, slope);
         }
 
+        //preq-LOGIC-8
         public double ComputePredictYFromLinearRegression(double xValue, double slope, double intercept)
         {
             if (double.IsNaN(xValue) || double.IsNaN(slope) || double.IsNaN(intercept))
