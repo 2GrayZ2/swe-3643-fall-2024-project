@@ -3,16 +3,11 @@ using CalculatorLogic;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<CalculatorLogic.Calculator>();
 builder.Services.AddScoped<Calculator>();
-
-
-
 
 var app = builder.Build();
 

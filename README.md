@@ -96,73 +96,80 @@ Follow these steps to build and execute the web application directly from the co
 ### Steps to Build and Run
 
 1. **Navigate to the Application Directory**
-   - Open a terminal or command prompt and navigate to the directory where you cloned the repository:
-     ```bash
-     cd yourproject
-     ```
+    - Open a terminal/command prompt/powershell and navigate to the directory where you cloned the repository:
+      ```bash
+      # (for example)
+      cd "D:\GitHub Repositories\swe-3643-fall-2024-project\src\CalculatorWebServerApp\CalculatorWebServerApp\bin\Debug\net8.0"
+      ```
 
 2. **Build the Application**
-   - Run the following command to build the application:
-     ```bash
-     dotnet build
-     ```
-   - Sample output:
-     ```bash
-     Microsoft (R) Build Engine version 17.5.0+57d1da9d5 for .NET
-     Copyright (C) Microsoft Corporation. All rights reserved.
-
-     Restore completed in 89.24 ms for /path/to/yourproject/yourproject.csproj.
-     Build succeeded.
-         0 Warning(s)
-         0 Error(s)
-
-     Time Elapsed 00:00:01.75
-     ```
+    - Navigate to the root directory of the project (where the `.csproj` file is located) and run the following command to build the application:
+      ```bash
+      cd "D:\GitHub Repositories\swe-3643-fall-2024-project\src\CalculatorWebServerApp"
+      dotnet build
+      ```
+    - Sample output:
+      ```bash
+      Microsoft (R) Build Engine version 17.5.0+57d1da9d5 for .NET
+      Copyright (C) Microsoft Corporation. All rights reserved.
+ 
+      Restore completed in 89.24 ms for /path/to/yourproject/yourproject.csproj.
+      Build succeeded.
+          0 Warning(s)
+          0 Error(s)
+ 
+      Time Elapsed 00:00:01.75
+      ```
 
 3. **Run the Application**
-   - Start the application using the following command:
-     ```bash
-     dotnet run
-     ```
-   - Sample output:
-     ```bash
-     info: Extensions.Hosting.AsyncInitialization.RootInitializer[0]
-           Starting async initialization
-     info: Microsoft.Hosting.Lifetime[14]
-           Now listening on: https://localhost:5000
-     info: Microsoft.Hosting.Lifetime[14]
-           Application started. Press Ctrl+C to shut down.
-     info: Microsoft.Hosting.Lifetime[0]
-           Hosting environment: Development
-     ```
+    - After building the application, navigate to the `bin\Debug\net8.0` directory where the compiled DLL is located and run the following command:
+      ```bash
+      cd "D:\GitHub Repositories\swe-3643-fall-2024-project\src\CalculatorWebServerApp\CalculatorWebServerApp\bin\Debug\net8.0"
+      $env:ASPNETCORE_URLS = "http://localhost:5098"
+      dotnet CalculatorWebServerApp.dll
+      ```
+    - Sample output:
+      ```bash
+      info: Extensions.Hosting.AsyncInitialization.RootInitializer[0]
+            Starting async initialization
+      info: Microsoft.Hosting.Lifetime[14]
+            Now listening on: https://localhost:5098
+      info: Microsoft.Hosting.Lifetime[14]
+            Application started. Press Ctrl+C to shut down.
+      info: Microsoft.Hosting.Lifetime[0]
+            Hosting environment: Development
+      ```
+
+By following these updated steps, the `dotnet build` command will be executed in the appropriate location, and the application will be built and then run from the `bin\Debug\net8.0` directory.
+
 
 4. **Connect to the Application**
-   - After the application starts, open a web browser on the same machine and navigate to:
-     ```
-     http://localhost:5000
-     ```
-   - Replace `5000` with the port number shown in the sample output if it differs.
+    - After the application starts, open a web browser on the same machine and navigate to:
+      ```
+      http://localhost:5098
+      ```
+    - Replace `5098` with the port number shown in the sample output if it differs.
 
 ### Common Issues
 
 1. **Port Already in Use**
-   - If you encounter an error similar to:
-     ```
-     Unhandled IO exception: Failed to bind to https://127.0.0.1:5000: address already in use.
-     ```
-      - This means another process is already using the application’s HTTP port. To resolve:
-         1. Find the process using the port:
-            ```bash
-            netstat -ano | findstr :5000
-            ```
-         2. Kill the process (replace `<PID>` with the process ID):
-            ```bash
-            taskkill /PID <PID> /F
-            ```
-         3. Restart the application.
+    - If you encounter an error similar to:
+      ```
+      Unhandled IO exception: Failed to bind to https://127.0.0.1:5000: address already in use.
+      ```
+        - This means another process is already using the application’s HTTP port. To resolve:
+            1. Find the process using the port:
+               ```bash
+               netstat -ano | findstr :5000
+               ```
+            2. Kill the process (replace `<PID>` with the process ID):
+               ```bash
+               taskkill /PID <PID> /F
+               ```
+            3. Restart the application.
 
 2. **Missing Dependencies**
-   - Ensure you’ve installed all prerequisites as described in the [Environment Setup](#environment) section.
+    - Ensure you’ve installed all prerequisites as described in the [Environment Setup](#environment-setup-for-running-the-web-application) section.
 
 By following these steps, your web application should build and run successfully, allowing you to interact with it through your browser.
 
