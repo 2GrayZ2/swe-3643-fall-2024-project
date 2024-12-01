@@ -267,3 +267,4 @@ Passed!  - Failed:     0, Passed:     8, Skipped:     0, Total:     8, Duration:
 ---
 
 # Final Video Presentation
+[Download Video](https://github.com/2GrayZ2/swe-3643-fall-2024-project/releases/download/v1.0.0/SWE3643WebAppVid.zip)
